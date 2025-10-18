@@ -11,5 +11,6 @@
     "splashBackground": "splash.png",
     "dialAppName": "Moonlight",
     "appDescription": "Open Source NVIDIA GameStream Client",
-    "supportTouchMode": "full"
+    "supportTouchMode": "full",
+    "useAllMouseButtons": true
 }
