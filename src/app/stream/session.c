@@ -164,6 +164,10 @@ void session_screen_keyboard_closed(session_t *session) {
     session_input_screen_keyboard_closed(&session->input);
 }
 
+void session_set_mouse_grab(session_t *session, bool grab) {
+    session_input_set_mouse_grab(&session->input, grab);
+}
+
 void streaming_display_size(session_t *session, short width, short height) {
     session->display_width = width;
     session->display_height = height;
@@ -179,7 +183,9 @@ void streaming_enter_fullscreen(session_t *session) {
 }
 
 void streaming_enter_overlay(session_t *session, int x, int y, int w, int h) {
+    app_set_keyboard_grab(&session->app->input, false);
     app_set_mouse_grab(&session->app->input, false);
+    session_set_mouse_grab(session, false);
     SS4S_VideoRect dst = {x, y, w, h};
     if ((session->video_cap.transform & SS4S_VIDEO_CAP_TRANSFORM_UI_COMPOSITING) == 0) {
         SS4S_PlayerVideoSetDisplayArea(session->player, NULL, &dst);
@@ -193,35 +199,35 @@ void streaming_set_hdr(session_t *session, bool hdr) {
         SS4S_PlayerVideoSetHDRInfo(session->player, NULL);
     } else if (LiGetHdrMetadata(&hdr_metadata)) {
         SS4S_VideoHDRInfo info = {
-                .displayPrimariesX = {
-                        hdr_metadata.displayPrimaries[0].x,
-                        hdr_metadata.displayPrimaries[1].x,
-                        hdr_metadata.displayPrimaries[2].x
-                },
-                .displayPrimariesY = {
-                        hdr_metadata.displayPrimaries[0].y,
-                        hdr_metadata.displayPrimaries[1].y,
-                        hdr_metadata.displayPrimaries[2].y
-                },
-                .whitePointX = hdr_metadata.whitePoint.x,
-                .whitePointY = hdr_metadata.whitePoint.y,
-                .maxDisplayMasteringLuminance = hdr_metadata.maxDisplayLuminance * LUMINANCE_SCALE,
-                .minDisplayMasteringLuminance = hdr_metadata.minDisplayLuminance,
-                .maxContentLightLevel = hdr_metadata.maxContentLightLevel,
-                .maxPicAverageLightLevel = hdr_metadata.maxFrameAverageLightLevel,
+            .displayPrimariesX = {
+                hdr_metadata.displayPrimaries[0].x,
+                hdr_metadata.displayPrimaries[1].x,
+                hdr_metadata.displayPrimaries[2].x
+            },
+            .displayPrimariesY = {
+                hdr_metadata.displayPrimaries[0].y,
+                hdr_metadata.displayPrimaries[1].y,
+                hdr_metadata.displayPrimaries[2].y
+            },
+            .whitePointX = hdr_metadata.whitePoint.x,
+            .whitePointY = hdr_metadata.whitePoint.y,
+            .maxDisplayMasteringLuminance = hdr_metadata.maxDisplayLuminance * LUMINANCE_SCALE,
+            .minDisplayMasteringLuminance = hdr_metadata.minDisplayLuminance,
+            .maxContentLightLevel = hdr_metadata.maxContentLightLevel,
+            .maxPicAverageLightLevel = hdr_metadata.maxFrameAverageLightLevel,
         };
         populate_hdr_info_vui(&info, &session->config.stream);
         SS4S_PlayerVideoSetHDRInfo(session->player, &info);
     } else {
         SS4S_VideoHDRInfo info = {
-                .displayPrimariesX = {34000, 13250, 7500},
-                .displayPrimariesY = {16000, 34500, 3000},
-                .whitePointX = 15635,
-                .whitePointY = 16450,
-                .maxDisplayMasteringLuminance = 1000 * LUMINANCE_SCALE,
-                .minDisplayMasteringLuminance = 50,
-                .maxContentLightLevel = 1000,
-                .maxPicAverageLightLevel = 400,
+            .displayPrimariesX = {34000, 13250, 7500},
+            .displayPrimariesY = {16000, 34500, 3000},
+            .whitePointX = 15635,
+            .whitePointY = 16450,
+            .maxDisplayMasteringLuminance = 1000 * LUMINANCE_SCALE,
+            .minDisplayMasteringLuminance = 50,
+            .maxContentLightLevel = 1000,
+            .maxPicAverageLightLevel = 400,
         };
         populate_hdr_info_vui(&info, &session->config.stream);
         SS4S_PlayerVideoSetHDRInfo(session->player, &info);

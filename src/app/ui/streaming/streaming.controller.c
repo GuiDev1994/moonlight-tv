@@ -306,8 +306,10 @@ static void hide_overlay(lv_event_t *event) {
         return;
     }
     overlay_showing = false;
+    app_set_keyboard_grab(&global->input, true);
     app_set_mouse_grab(&global->input, true);
-    streaming_enter_fullscreen(controller->global->session);
+    session_set_mouse_grab(global->session, true);
+    streaming_enter_fullscreen(global->session);
 }
 
 static void overlay_key_cb(lv_event_t *e) {

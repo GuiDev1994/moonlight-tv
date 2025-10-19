@@ -87,6 +87,8 @@ GS_CLIENT app_gs_client_new(app_t *app);
 
 void app_set_mouse_grab(app_input_t *input, bool grab);
 
+void app_set_keyboard_grab(app_input_t *input, bool grab);
+
 bool app_get_mouse_relative();
 
 void app_set_keep_awake(app_t *app, bool awake);

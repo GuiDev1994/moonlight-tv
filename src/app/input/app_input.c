@@ -57,3 +57,14 @@ void app_set_mouse_grab(app_input_t *input, bool grab) {
 bool app_get_mouse_relative() {
     return SDL_GetRelativeMouseMode() == SDL_TRUE;
 }
+
+void app_set_keyboard_grab(app_input_t *input, bool grab) {
+    (void) input;
+#if TARGET_WEBOS
+    SDL_SetHint(SDL_HINT_WEBOS_ACCESS_POLICY_KEYS_HOME, grab ? "true" : "false");
+    SDL_SetHint(SDL_HINT_WEBOS_ACCESS_POLICY_KEYS_META, grab ? "true" : "false");
+    SDL_SetHint(SDL_HINT_WEBOS_ACCESS_POLICY_RIBBON, grab ? "false" : "true");
+#else
+    SDL_SetHint(SDL_HINT_GRAB_KEYBOARD, grab ? "1" : "0");
+#endif
+}
