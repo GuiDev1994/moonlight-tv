@@ -31,6 +31,12 @@ int main(int argc, char *argv[]) {
         return ret;
     }
 
+#if defined(TARGET_WEBOS)
+    /* Permite que o pipeline de video (120Hz) estabilize antes de exibir a UI.
+     * Corrige frame pacing incorreto no primeiro lance na LG C1. */
+    SDL_Delay(500);
+#endif
+
     app_launch_params_t *params = app_handle_launch(&app, argc, argv);
 
     app_ui_open(&app.ui, true, params);

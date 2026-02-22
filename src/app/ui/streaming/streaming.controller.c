@@ -82,7 +82,7 @@ bool streaming_refresh_stats() {
                           audio_stream_info.channels, SS4S_ModuleInfoGetId(app->ss4s.selection.audio_module));
     lv_label_set_text_fmt(controller->stats_items.rtt, "%d ms (var. %d ms)", dst->rtt, dst->rttVariance);
     lv_label_set_text_fmt(controller->stats_items.net_fps, "%.2f FPS", dst->receivedFps);
-    lv_label_set_text_fmt(controller->stats_items.bitrate, "%u Mbps", dst->currentBitrateKbps / 1000);
+    lv_label_set_text_fmt(controller->stats_items.bitrate, "%u Mbps", dst->currentBitrateKbps / 1000000);
 
     if (dst->submittedFrames) {
         lv_label_set_text_fmt(controller->stats_items.drop_rate, "%.2f%%",
