@@ -38,6 +38,8 @@ typedef struct VIDEO_STATS {
     float decodedFps;
     float avgDecoderLatency;
     uint32_t rtt, rttVariance;
+    uint64_t receivedBytes;
+    uint32_t currentBitrateKbps;
 } VIDEO_STATS;
 
 typedef struct VIDEO_INFO {

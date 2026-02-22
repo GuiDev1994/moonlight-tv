@@ -33,6 +33,15 @@ Or download IPK from [Latest release](https://github.com/mariotaku/moonlight-tv/
 
 Download DEB from [Latest release](https://github.com/mariotaku/moonlight-tv/releases/latest)
 
+## Building from Source
+
+### For LG webOS (LG C1, etc.)
+
+See [docs/BUILD_WEBOS.md](docs/BUILD_WEBOS.md) for detailed instructions. Quick start:
+
+- **Windows (Docker):** `.\scripts\webos\build_with_docker.ps1`
+- **Linux/WSL:** `./scripts/webos/build_for_lg.sh`
+
 ## [Documentations](https://github.com/mariotaku/moonlight-tv/wiki)
 
 ## Credits

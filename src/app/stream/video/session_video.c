@@ -146,6 +146,7 @@ int vdec_delegate_submit(PDECODE_UNIT decodeUnit) {
 
     vdec_temp_stats.receivedFrames++;
     vdec_temp_stats.totalFrames++;
+    vdec_temp_stats.receivedBytes += (uint64_t) decodeUnit->fullLength;
 
     vdec_temp_stats.totalCaptureLatency += decodeUnit->frameHostProcessingLatency;
     vdec_temp_stats.totalReassemblyTime += decodeUnit->enqueueTimeMs - decodeUnit->receiveTimeMs;
@@ -181,6 +182,7 @@ void vdec_stat_submit(const struct VIDEO_STATS *src, unsigned long now) {
     memcpy(dst, src, sizeof(struct VIDEO_STATS));
     unsigned long delta = now - dst->measurementStartTimestamp;
     if (delta <= 0) { return; }
+    dst->currentBitrateKbps = (uint32_t) ((dst->receivedBytes * 8) / (delta / 1000.0f));
     dst->totalFps = (float) dst->totalFrames / ((float) delta / 1000);
     dst->receivedFps = (float) dst->receivedFrames / ((float) delta / 1000);
     dst->decodedFps = (float) dst->submittedFrames / ((float) delta / 1000);
