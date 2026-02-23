@@ -82,6 +82,20 @@ bool streaming_refresh_stats() {
                           audio_stream_info.channels, SS4S_ModuleInfoGetId(app->ss4s.selection.audio_module));
     lv_label_set_text_fmt(controller->stats_items.rtt, "%d ms (var. %d ms)", dst->rtt, dst->rttVariance);
     lv_label_set_text_fmt(controller->stats_items.net_fps, "%.2f FPS", dst->receivedFps);
+    float renderFps = dst->decodedFps;
+#if defined(TARGET_WEBOS)
+    int displayRate = 0;
+    if (SDL_webOSGetRefreshRate(&displayRate) && displayRate > 0 && renderFps > (float) displayRate) {
+        renderFps = (float) displayRate;
+    }
+#else
+    SDL_DisplayMode mode;
+    if (SDL_GetCurrentDisplayMode(0, &mode) == 0 && mode.refresh_rate > 0
+        && renderFps > (float) mode.refresh_rate) {
+        renderFps = (float) mode.refresh_rate;
+    }
+#endif
+    lv_label_set_text_fmt(controller->stats_items.render_fps, "%.2f FPS", renderFps);
     lv_label_set_text_fmt(controller->stats_items.bitrate, "%u Mbps", dst->currentBitrateKbps / 1000000);
 
     if (dst->submittedFrames) {
@@ -269,9 +283,9 @@ static void suspend_streaming(lv_event_t *event) {
 static void open_keyboard(lv_event_t *event) {
     streaming_controller_t *controller = lv_event_get_user_data(event);
     hide_overlay(event);
-    app_t *app = controller->global;
-    app_start_text_input(&app->ui.input, 0, app->ui.height / 2 - 40, app->ui.width, 40);
-    session_screen_keyboard_opened(app->session);
+    lv_disp_t *disp = lv_disp_get_default();
+    app_start_text_input(&controller->global->ui.input, 0, 0,
+                        lv_disp_get_hor_res(disp), lv_disp_get_ver_res(disp));
 }
 
 static void toggle_vmouse(lv_event_t *event) {

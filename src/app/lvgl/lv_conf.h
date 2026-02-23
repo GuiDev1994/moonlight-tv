@@ -452,7 +452,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_IMGBTN       1
 
-#define LV_USE_KEYBOARD     0
+#define LV_USE_KEYBOARD     1
 
 #define LV_USE_LED          1
 

@@ -129,6 +129,7 @@ lv_obj_t *streaming_scene_create(lv_fragment_t *self, lv_obj_t *parent) {
 
     controller->stats_items.rtt = stat_label(stats, "Network RTT");
     controller->stats_items.net_fps = stat_label(stats, "Network framerate");
+    controller->stats_items.render_fps = stat_label(stats, "Render framerate");
     controller->stats_items.drop_rate = stat_label(stats, "Network frame drop");
     controller->stats_items.bitrate = stat_label(stats, "Bitrate");
     controller->stats_items.host_latency = stat_label(stats, "Host processing latency");

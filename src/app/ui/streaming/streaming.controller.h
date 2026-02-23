@@ -25,6 +25,7 @@ typedef struct {
         lv_obj_t *audio;
         lv_obj_t *rtt;
         lv_obj_t *net_fps;
+        lv_obj_t *render_fps;
         lv_obj_t *drop_rate;
         lv_obj_t *bitrate;
         lv_obj_t *host_latency;

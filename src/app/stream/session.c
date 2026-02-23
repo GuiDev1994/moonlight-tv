@@ -270,7 +270,6 @@ void session_config_init(app_t *app, session_config_t *config, const SERVER_DATA
         config->stream.bitrate = settings_optimal_bitrate(&video_cap, config->stream.width, config->stream.height,
                                                           config->stream.fps);
     }
-    // Cap framerate to platform request
     if (video_cap.maxBitrate && config->stream.bitrate > video_cap.maxBitrate) {
         config->stream.bitrate = (int) video_cap.maxBitrate;
     }
@@ -320,6 +319,13 @@ void session_config_init(app_t *app, session_config_t *config, const SERVER_DATA
         config->stream.audioConfiguration = AUDIO_CONFIGURATION_STEREO;
     }
 #endif
+    /* HDR 10-bit precisa de ~25% mais bitrate que SDR para mesma qualidade em cenas complexas */
+    if (app_config->hdr && (config->stream.supportedVideoFormats & (VIDEO_FORMAT_H265_MAIN10 | VIDEO_FORMAT_AV1_MAIN10))) {
+        config->stream.bitrate = (int) ((int64_t) config->stream.bitrate * 125 / 100);
+        if (video_cap.maxBitrate && config->stream.bitrate > video_cap.maxBitrate) {
+            config->stream.bitrate = (int) video_cap.maxBitrate;
+        }
+    }
     config->stream.encryptionFlags = ENCFLG_AUDIO;
 }
 
